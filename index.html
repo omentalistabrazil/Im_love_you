@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jumpscare</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .scanner-container {
+            display: none;
+            width: 80%;
+            height: 10px;
+            background-color: gray;
+            margin: 20px auto;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scanner-bar {
+            position: absolute;
+            width: 20%;
+            height: 100%;
+            background-color: red;
+            animation: scanner-animation 1s linear infinite;
+        }
+
+        @keyframes scanner-animation {
+            0% { left: -20%; }
+            100% { left: 100%; }
+        }
+
+        .background, .jumpscare1, .jumpscare2 {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .background {
+            background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtBphr6AlFJ4Icv_GRPf2uVTnniLwCFjMz3V7iIctLIDFcGOMLU1YdYcg&s=10);
+            z-index: 1;
+        }
+
+        .jumpscare1 {
+            background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfK6zigzDxzr04jht6KRlytUeOst4XZts2FHzXv7ehvMEMP04vT-zzXZLX&s=10);
+            z-index: 2;
+        }
+
+        .jumpscare2 {
+            background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgWJ_uxRIy-k-4FbGWyuzjn9bi4TpEcenEs4yaB2ZQ7IZoF-OD_a931os&s=10);
+            z-index: 3;
+        }
+
+        #start-button {
+            font-size: 20px;
+            padding: 10px 20px;
+            background-color: white;
+            color: black;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #start-button:hover {
+            background-color: gray;
+        }
+
+        .message, #timer {
+            font-size: 17px;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: none; /* Início escondido */
+        }
+    </style>
+</head>
+<body>
+    <button id="start-button">Coloque seu dedo aqui para começar</button>
+    <h1 class="message" id="message">Scanneando meu amigo..!</h1>
+    <div class="scanner-container" id="scanner-container">
+        <div class="scanner-bar"></div>
+    </div>
+    <p class="message" id="sub-message">Procurando o que ele ama..!</p>
+    <div class="background" id="background"></div>
+    <div class="jumpscare1" id="jumpscare1"></div>
+    <div class="jumpscare2" id="jumpscare2"></div>
+    <div id="timer">00:00</div>
+
+    <audio id="scare-sound" src="https://drive.google.com/uc?export=download&id=1GcDc2AURF8EaAdT0qCUlt5kBmCLYNMOU" preload="auto"></audio>
+
+    <script>
+        document.getElementById('start-button').addEventListener('click', function () {
+            // Oculta o botão inicial e exibe mensagens
+            document.getElementById('start-button').style.display = 'none';
+            document.getElementById('message').style.display = 'block';
+            document.getElementById('scanner-container').style.display = 'block';
+            document.getElementById('sub-message').style.display = 'block';
+            document.getElementById('timer').style.display = 'block';
+
+            var delay = Math.floor(Math.random() * 5 + 3); // Entre 3 e 7 segundos
+            var timeRemaining = delay;
+
+            function updateTimer() {
+                var minutes = Math.floor(timeRemaining / 60);
+                var seconds = timeRemaining % 60;
+                if (seconds < 10) {
+                    seconds = '0' + seconds;
+                }
+                document.getElementById('timer').textContent = minutes + ':' + seconds;
+                timeRemaining--;
+
+                if (timeRemaining < 0) {
+                    var sound = document.getElementById('scare-sound');
+                    sound.play();
+
+                    document.getElementById('message').style.display = 'none';
+                    document.getElementById('scanner-container').style.display = 'none';
+                    document.getElementById('sub-message').style.display = 'none';
+
+                    document.getElementById('background').style.display = 'block';
+                    document.getElementById('jumpscare1').style.display = 'block';
+
+                    setTimeout(function () {
+                        document.getElementById('jumpscare1').style.display = 'none';
+                        document.getElementById('jumpscare2').style.display = 'block';
+
+                        setTimeout(function () {
+                            document.getElementById('jumpscare2').style.display = 'none';
+                        }, 1900);
+                    }, 5000);
+
+                    clearInterval(timerInterval);
+                }
+            }
+
+            var timerInterval = setInterval(updateTimer, 1000);
+        });
+    </script>
+</body>
+</html>
