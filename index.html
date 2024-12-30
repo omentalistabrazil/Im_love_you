@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amigo fiel</title>
+    <title>Amigo Fiel</title>
     <style>
         body {
             background-color: black;
@@ -16,6 +16,7 @@
             align-items: center;
             margin: 0;
             overflow: hidden;
+            flex-direction: column;
         }
 
         .scanner-container {
@@ -87,11 +88,83 @@
             font-size: 17px;
             font-weight: bold;
             text-transform: uppercase;
-            display: none; /* Início escondido */
+            display: none;
         }
+
+        #visitor-count {
+            font-size: 16px;
+            color: white;
+        }
+
+        /* Campo de nome */
+        #name-input {
+            font-size: 18px;
+            padding: 10px;
+            margin: 20px;
+            border-radius: 5px;
+            border: 1px solid white;
+            background-color: transparent;
+            color: white;
+            width: 70%; /* Ajusta o tamanho do campo */
+            max-width: 400px; /* Limita o tamanho máximo */
+        }
+
+        /* Ranking */
+        #ranking {
+            font-size: 11px;
+            color: red;
+            text-align: right;
+            max-width: 8000px;
+            margin: 20px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 100px;
+            display: block;
+        }
+
+        /* Comentários */
+        #comments-section {
+            display: none;
+            text-align: left;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            max-width: 300px;
+            margin: 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            color: white;
+        }
+
+        #comments-button {
+            background-color: black;
+            color: black;
+            padding: 0px;
+            border: none;
+            cursor: pointer;
+            border-radius: 1px;
+        }
+
+        #comments-button:hover {
+            background-color: gray;
+        }
+
     </style>
 </head>
 <body>
+
+    <!-- Contador de Visitantes -->
+    <div id="visitor-count">Visitantes online: 0</div>
+
+    <!-- Ranking -->
+    <div id="ranking">
+        <h3>Ranking</h3>
+        <ul id="ranking-list"></ul>
+    </div>
+
+    <!-- Campo para o nome -->
+    <input type="text" id="name-input" placeholder="Digite seu nome aqui" />
+
+    <!-- Tela do Scanner -->
     <button id="start-button">Coloque seu dedo aqui para começar</button>
     <h1 class="message" id="message">Scanneando meu amigo..!</h1>
     <div class="scanner-container" id="scanner-container">
@@ -105,14 +178,71 @@
 
     <audio id="scare-sound" src="https://drive.google.com/uc?export=download&id=1GcDc2AURF8EaAdT0qCUlt5kBmCLYNMOU" preload="auto"></audio>
 
+    <!-- Comentários -->
+    <button id="comments-button">Ver Comentários</button>
+    <div id="comments-section">
+        <h4>Comentários:</h4>
+        <textarea id="comment-input" placeholder="Deixe seu comentário..." rows="4" cols="50"></textarea><br><br>
+        <button id="submit-comment">Enviar Comentário</button>
+        <div id="comments-list"></div>
+    </div>
+
     <script>
+        // Contador de visitantes
+        function updateVisitorCount() {
+            let visitCount = localStorage.getItem('visitorCount');
+            if (visitCount === null) {
+                visitCount = 0;
+            }
+            visitCount++;
+            localStorage.setItem('visitorCount', visitCount);
+            document.getElementById('visitor-count').textContent = `Visitantes online: ${visitCount}`;
+        }
+
+        // Atualiza o contador de visitantes quando a página é carregada
+        updateVisitorCount();
+
+        // Ranking
+        function updateRanking() {
+            const rankingList = JSON.parse(localStorage.getItem('ranking')) || [];
+            const rankingElement = document.getElementById('ranking-list');
+            rankingElement.innerHTML = '';
+            rankingList.forEach(entry => {
+                const li = document.createElement('li');
+                li.textContent = `${entry.name} - ${entry.time}`;
+                rankingElement.appendChild(li);
+            });
+        }
+
+        // Salvando no ranking
+        function saveRanking(name, time) {
+            const rankingList = JSON.parse(localStorage.getItem('ranking')) || [];
+            rankingList.push({ name, time });
+            rankingList.sort((a, b) => a.time - b.time); // Ordena o ranking por tempo
+            localStorage.setItem('ranking', JSON.stringify(rankingList));
+            updateRanking();
+        }
+
+        // Scanner Logic
         document.getElementById('start-button').addEventListener('click', function () {
-            // Oculta o botão inicial e exibe mensagens
+            const name = document.getElementById('name-input').value;
+
+            if (!name) {
+                alert('Por favor, insira seu nome para continuar.');
+                return;
+            }
+
+            // Oculta o campo de nome e o botão de início
+            document.getElementById('name-input').style.display = 'none';
             document.getElementById('start-button').style.display = 'none';
             document.getElementById('message').style.display = 'block';
             document.getElementById('scanner-container').style.display = 'block';
             document.getElementById('sub-message').style.display = 'block';
             document.getElementById('timer').style.display = 'block';
+
+            // Atualiza as mensagens com o nome inserido
+            document.getElementById('message').textContent = `Scanneando ${name}..!`;
+            document.getElementById('sub-message').textContent = `Procurando o que ${name} ama..!`;
 
             var delay = Math.floor(Math.random() * 5 + 3); // Entre 3 e 7 segundos
             var timeRemaining = delay;
@@ -144,14 +274,55 @@
                         setTimeout(function () {
                             document.getElementById('jumpscare2').style.display = 'none';
                         }, 1900);
-                    }, 5000);
+                    }, 1000);
 
+                    saveRanking(name, delay); // Salva o nome e tempo no ranking
                     clearInterval(timerInterval);
                 }
             }
 
             var timerInterval = setInterval(updateTimer, 1000);
         });
+
+        // Mostrar e ocultar comentários
+        document.getElementById('comments-button').addEventListener('click', function() {
+            const commentsSection = document.getElementById('comments-section');
+            if (commentsSection.style.display === 'block') {
+                commentsSection.style.display = 'none';
+            } else {
+                commentsSection.style.display = 'block';
+            }
+        });
+
+        // Enviar comentário
+        document.getElementById('submit-comment').addEventListener('click', function() {
+            const comment = document.getElementById('comment-input').value;
+            if (comment) {
+                const commentsList = JSON.parse(localStorage.getItem('comments')) || [];
+                commentsList.push(comment);
+                localStorage.setItem('comments', JSON.stringify(commentsList));
+                document.getElementById('comment-input').value = '';
+                displayComments();
+            }
+        });
+
+        // Exibir comentários
+        function displayComments() {
+            const commentsList = JSON.parse(localStorage.getItem('comments')) || [];
+            const commentsContainer = document.getElementById('comments-list');
+            commentsContainer.innerHTML = '';
+            commentsList.forEach(comment => {
+                const div = document.createElement('div');
+                div.textContent = comment;
+                commentsContainer.appendChild(div);
+            });
+        }
+
+        // Exibe os comentários ao carregar a página
+        displayComments();
+
+        // Atualiza o ranking assim que a página carrega
+        updateRanking();
     </script>
 </body>
 </html>
