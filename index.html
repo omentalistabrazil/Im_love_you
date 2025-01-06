@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tu é gay?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+      overflow: hidden;
+    }
+    .question {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      transition: transform 0.2s;
+    }
+    #yes {
+      background-color: #4caf50;
+      color: white;
+    }
+    #no {
+      background-color: #f44336;
+      color: white;
+      position: absolute;
+    }
+    #message {
+      display: none;
+      font-size: 2rem;
+      color: #333;
+      margin-top: 20px;
+      animation: fadeIn 2s ease;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    #confetti {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://media.tenor.com/YHz7Jq8pJAwAAAAj/rainbow-confetti.gif') center/cover no-repeat;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div id="main-content">
+    <div class="question">Tu é gay?</div>
+    <button id="yes">Sim</button>
+    <button id="no">Não</button>
+  </div>
+  <div id="message">HAHAHA! Sabia!!! 🌈</div>
+  <div id="confetti"></div>
+
+  <!-- Áudio local -->
+  <audio id="laugh-sound" src="som-engracado.mp3"></audio>
+
+  <script>
+    const noButton = document.getElementById('no');
+    const yesButton = document.getElementById('yes');
+    const message = document.getElementById('message');
+    const mainContent = document.getElementById('main-content');
+    const confetti = document.getElementById('confetti');
+    const laughSound = document.getElementById('laugh-sound');
+
+    // Botão "não" foge e exibe mensagens
+    noButton.addEventListener('mouseover', () => {
+      const x = Math.random() * (window.innerWidth - noButton.offsetWidth);
+      const y = Math.random() * (window.innerHeight - noButton.offsetHeight);
+      noButton.style.left = `${x}px`;
+      noButton.style.top = `${y}px`;
+      noButton.textContent = "Não adianta fugir!";
+    });
+
+    // Quando clica em "Sim"
+    yesButton.addEventListener('click', () => {
+      mainContent.style.display = 'none'; // Esconde os botões
+      confetti.style.display = 'block'; // Mostra confetes
+      message.style.display = 'block'; // Mostra mensagem
+      laughSound.play(); // Toca o som
+    });
+  </script>
+</body>
+</html>
