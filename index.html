@@ -1,108 +1,225 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tu é gay?</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f0f0f0;
-      overflow: hidden;
-    }
-    .question {
-      font-size: 2rem;
-      margin-bottom: 20px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      transition: transform 0.2s;
-    }
-    #yes {
-      background-color: #4caf50;
-      color: white;
-    }
-    #no {
-      background-color: #f44336;
-      color: white;
-      position: absolute;
-    }
-    #message {
-      display: none;
-      font-size: 2rem;
-      color: #333;
-      margin-top: 20px;
-      animation: fadeIn 2s ease;
-    }
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.5);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-    #confetti {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('https://media.tenor.com/YHz7Jq8pJAwAAAAj/rainbow-confetti.gif') center/cover no-repeat;
-      z-index: 10;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido Especial</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ff758c, #ff7eb3);
+            text-align: center;
+            color: white;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 400px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1, h2 {
+            font-family: 'Great Vibes', cursive;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        h1 {
+            font-size: 28px;
+        }
+
+        h2 {
+            font-size: 32px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #sim {
+            background: #ff4081;
+            color: white;
+        }
+
+        #sim:hover {
+            background: #e91e63;
+        }
+
+        #nao {
+            background: #ffffff;
+            color: #ff4081;
+            position: absolute;
+            transition: 0.3s ease-in-out;
+        }
+
+        #nao:hover {
+            transform: scale(1.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #mensagem {
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeInMessage 2s forwards;
+        }
+
+        input {
+            font-size: 18px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        #erro {
+            color: #ff4081;
+            font-size: 14px;
+            display: none;
+        }
+
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeInMessage {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulsar {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1, h2 {
+                font-size: 24px;
+            }
+
+            button {
+                font-size: 18px;
+            }
+        }
+
+        /* Estilo do coração pulsante */
+        #coracao {
+            font-size: 50px;
+            color: #ff4081;
+            animation: pulsar 1s infinite;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-  <div id="main-content">
-    <div class="question">Tu é gay?</div>
-    <button id="yes">Sim</button>
-    <button id="no">Não</button>
-  </div>
-  <div id="message">HAHAHA! Sabia!!! 🌈</div>
-  <div id="confetti"></div>
+    <div class="container">
+        <h1>Qual é o seu nome?</h1>
+        <input type="text" id="nomePessoa" placeholder="Digite seu nome" />
+        <div id="erro">Por favor, digite seu nome.</div>
+        <br />
+        <button id="iniciar" onclick="iniciarPedido()">Começar</button>
 
-  <!-- Áudio local -->
-  <audio id="laugh-sound" src="som-engracado.mp3"></audio>
+        <div id="pedido" class="hidden">
+            <h1>Quer namorar comigo, <span id="nomeDisplay"></span>? ❤️</h1>
+            <div class="buttons">
+                <button id="sim" onclick="mostrarMensagem()">Sim</button>
+                <button id="nao" onmouseover="fugir()" onclick="fugir()">Não</button>
+            </div>
+            <div id="mensagem" class="hidden">
+                <h2>Eu Te Amo ❤️</h2>
+            </div>
+            <!-- Coração pulsante adicionado -->
+            <div id="coracao" class="hidden">💖</div>
+        </div>
+    </div>
 
-  <script>
-    const noButton = document.getElementById('no');
-    const yesButton = document.getElementById('yes');
-    const message = document.getElementById('message');
-    const mainContent = document.getElementById('main-content');
-    const confetti = document.getElementById('confetti');
-    const laughSound = document.getElementById('laugh-sound');
+    <script>
+        function iniciarPedido() {
+            var nome = document.getElementById("nomePessoa").value;
+            if (nome === "") {
+                document.getElementById("erro").style.display = "block";
+                return;
+            }
 
-    // Botão "não" foge e exibe mensagens
-    noButton.addEventListener('mouseover', () => {
-      const x = Math.random() * (window.innerWidth - noButton.offsetWidth);
-      const y = Math.random() * (window.innerHeight - noButton.offsetHeight);
-      noButton.style.left = `${x}px`;
-      noButton.style.top = `${y}px`;
-      noButton.textContent = "Não adianta fugir!";
-    });
+            document.getElementById("erro").style.display = "none";
+            document.getElementById("nomeDisplay").textContent = nome;
+            document.getElementById("nomePessoa").style.display = "none";
+            document.getElementById("iniciar").style.display = "none";
+            document.getElementById("pedido").classList.remove("hidden");
 
-    // Quando clica em "Sim"
-    yesButton.addEventListener('click', () => {
-      mainContent.style.display = 'none'; // Esconde os botões
-      confetti.style.display = 'block'; // Mostra confetes
-      message.style.display = 'block'; // Mostra mensagem
-      laughSound.play(); // Toca o som
-    });
-  </script>
+            // Animação para o nome aparecer com "zoom"
+            setTimeout(function() {
+                document.getElementById("nomeDisplay").style.transform = "scale(1.2)";
+                document.getElementById("nomeDisplay").style.transition = "transform 1s";
+            }, 100);
+        }
+
+        function mostrarMensagem() {
+            // Adicionar efeito de fade na mensagem
+            document.getElementById("mensagem").classList.remove("hidden");
+            setTimeout(function() {
+                document.getElementById("mensagem").style.opacity = 1;
+            }, 100);
+
+            // Exibir coração pulsante
+            document.getElementById("coracao").classList.remove("hidden");
+
+            // Som de clique
+            var clickSound = new Audio('https://www.soundjay.com/button/beep-07.wav');
+            clickSound.play();
+
+            // Espera 1 segundos e depois redireciona para o vídeo
+            setTimeout(function() {
+                window.location.href = "https://youtu.be/Jr6LyMe5BJo"; // Redireciona para o vídeo
+            }, 1000);
+        }
+
+        function fugir() {
+            let botao = document.getElementById("nao");
+            let x = Math.random() * (window.innerWidth - 100);
+            let y = Math.random() * (window.innerHeight - 50);
+            botao.style.left = `${x}px`;
+            botao.style.top = `${y}px`;
+        }
+    </script>
 </body>
 </html>
