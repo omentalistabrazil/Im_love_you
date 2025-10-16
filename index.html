@@ -1,225 +1,343 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedido Especial</title>
+    <title>Nosso Recomeço</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #ff758c, #ff7eb3);
-            text-align: center;
-            color: white;
-            height: 100vh;
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            color: #5a3e36;
+            overflow-x: hidden;
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin: 0;
-            overflow: hidden;
+            padding: 20px;
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            width: 80%;
-            max-width: 400px;
-            animation: fadeIn 1s ease-in-out;
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        h1, h2 {
-            font-family: 'Great Vibes', cursive;
-            animation: slideIn 1s ease-in-out;
+        .hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 105, 180, 0.3);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
         }
 
         h1 {
-            font-size: 28px;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #d46a7e;
+            position: relative;
+            z-index: 1;
         }
 
-        h2 {
-            font-size: 32px;
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #8a5a44;
+            position: relative;
+            z-index: 1;
+        }
+
+        .message {
+            background-color: rgba(255, 245, 245, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: left;
+            line-height: 1.6;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 1;
+        }
+
+        .message p {
+            margin-bottom: 15px;
+        }
+
+        .photos {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .photo-placeholder {
+            width: 150px;
+            height: 150px;
+            background-color: #f8d7da;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #d46a7e;
+            border: 2px dashed #d46a7e;
+        }
+
+        .memories {
+            margin: 30px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .memory-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            text-align: left;
         }
 
         .buttons {
-            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            position: relative;
+            z-index: 1;
         }
 
         button {
-            font-size: 20px;
-            padding: 10px 20px;
-            margin: 10px;
+            padding: 12px 30px;
             border: none;
-            border-radius: 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            font-weight: bold;
         }
 
-        #sim {
-            background: #ff4081;
+        #yes-btn {
+            background-color: #d46a7e;
             color: white;
         }
 
-        #sim:hover {
-            background: #e91e63;
+        #yes-btn:hover {
+            background-color: #c05a6e;
+            transform: scale(1.05);
         }
 
-        #nao {
-            background: #ffffff;
-            color: #ff4081;
-            position: absolute;
-            transition: 0.3s ease-in-out;
+        #no-btn {
+            background-color: #f0f0f0;
+            color: #5a3e36;
         }
 
-        #nao:hover {
-            transform: scale(1.1);
+        #no-btn:hover {
+            background-color: #e0e0e0;
         }
 
         .hidden {
             display: none;
         }
 
-        #mensagem {
-            margin-top: 20px;
-            opacity: 0;
-            animation: fadeInMessage 2s forwards;
+        .response-message {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: rgba(212, 106, 126, 0.1);
+            position: relative;
+            z-index: 1;
         }
 
-        input {
-            font-size: 18px;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            margin-bottom: 20px;
-            width: 100%;
-            box-sizing: border-box;
+        footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #8a5a44;
+            position: relative;
+            z-index: 1;
         }
 
-        #erro {
-            color: #ff4081;
-            font-size: 14px;
-            display: none;
-        }
-
-        /* Animações */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(-30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes fadeInMessage {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes pulsar {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.5); }
-            100% { transform: scale(1); }
-        }
-
-        /* Responsividade */
         @media (max-width: 600px) {
             .container {
                 padding: 20px;
             }
-
-            h1, h2 {
-                font-size: 24px;
+            
+            h1 {
+                font-size: 2rem;
             }
-
-            button {
-                font-size: 18px;
+            
+            .buttons {
+                flex-direction: column;
+                gap: 10px;
             }
-        }
-
-        /* Estilo do coração pulsante */
-        #coracao {
-            font-size: 50px;
-            color: #ff4081;
-            animation: pulsar 1s infinite;
-            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Qual é o seu nome?</h1>
-        <input type="text" id="nomePessoa" placeholder="Digite seu nome" />
-        <div id="erro">Por favor, digite seu nome.</div>
-        <br />
-        <button id="iniciar" onclick="iniciarPedido()">Começar</button>
-
-        <div id="pedido" class="hidden">
-            <h1>Quer namorar comigo, <span id="nomeDisplay"></span>? ❤️</h1>
-            <div class="buttons">
-                <button id="sim" onclick="mostrarMensagem()">Sim</button>
-                <button id="nao" onmouseover="fugir()" onclick="fugir()">Não</button>
-            </div>
-            <div id="mensagem" class="hidden">
-                <h2>Eu Te Amo ❤️</h2>
-            </div>
-            <!-- Coração pulsante adicionado -->
-            <div id="coracao" class="hidden">💖</div>
+        <div class="hearts" id="hearts-container"></div>
+        
+        <h1>Para a Mulher da Minha Vida</h1>
+        <p class="subtitle">Um pedido do coração para recomeçarmos nossa história</p>
+        
+        <div class="message">
+            <p>Querida Lizia,</p>
+            
+            <p>Escrevo estas palavras com o coração transbordando de sentimentos que nunca deixaram de existir. Cada dia que passamos separados me mostrou o quanto você é especial e o quanto nossa conexão é única.</p>
+            
+            <p>Lembro me de cada conversa, cada risada compartilhada, cada momento em que nos apoiamos. Essas memórias ficaram guardadas no lugar mais especial do meu coração, e elas me mostram que o que tivemos foi real e valioso cada personagem que criamos.</p>
+            
+            <p>nós Comentemos erros, assim como todos cometemos, mas aprendi com cada um deles e voce tambem. e hoje entendo melhor o que realmente importa na vida: o amor genuíno, o respeito e a cumplicidade que só encontrei com você.</p>
+            
+            <p>Não estou pedindo para voltarmos ao que éramos, mas para construirmos algo ainda mais bonitoo, com mais compreensão, comunicação e amor. Uma relação onde nos dois possamos ser nossa melhor versão, juntos.</p>
+            
+            <p>Por isso, com todo o meu coração, te pergunto:</p>
+            
+            <p style="text-align: center; font-weight: bold; font-size: 1.2rem; margin: 20px 0;">Você aceita dar uma segunda chance ao nosso amor?</p>
         </div>
+        
+        <div class="memories">
+            <h2>Lembranças que guardo no coração</h2>
+            <div class="memory-item">
+                <p><strong>Nossa primeira conversa "serto e werrado foi tudo começou":</strong> Aquele momento em que percebi que havia encontrado alguém especial.</p>
+            </div>
+            <div class="memory-item">
+                <p><strong>As noites em claro nos indo dormir tarde quase 3h:</strong> Conversando sobre tudo, sonhando juntos, criando nosso próprio mundo oprimido o biel, convesando besteira, E se amandoo sinto saudades disso tudo.</p>
+            </div>
+            <div class="memory-item">
+                <p><strong>Seu apoio incondicional:</strong> Nos momentos difíceis, você sempre esteve lá, e isso significou tudo para mim.</p>
+            </div>
+            <!-- Adicione mais memórias pessoais aqui -->
+        </div>
+        
+        <div class="buttons">
+            <button id="yes-btn">SIM, EU ACEITO!</button>
+            <button id="no-btn">Preciso pensar</button>
+        </div>
+        
+        <div id="positive-response" class="response-message hidden">
+            <h2>❤️ OBRIGADO! ❤️</h2>
+            <p>Você não imagina a felicidade que estou sentindoo agora! Prometo fazer de tudo para que este recomeço seja ainda mais especial do que antes. Mal posso esperar para construir novos momentos incríveis ao seu lado lizia!</p>
+            <p>Te amooooooo mais do que palavras podem expressar voltamos a ser fashion novamentee HEHEHEHEHHE!</p>
+        </div>
+        
+        <div id="negative-response" class="response-message hidden">
+            <h2>Entendo...</h2>
+            <p>Respeito completamente sua decisão e o tempo que precisa. Mesmo que esta não seja a resposta que eu esperava, saiba que meus sentimentos por você continuam genuínos. Se mudar de ideia, estarei aqui, com o coração aberto.</p>
+            <p>Obrigado por ter sido tão importante na minha vida.</p>
+        </div>
+        
+        <footer>
+            <p>Feito com todo o carinho e amor do mundo ❤️</p>
+        </footer>
     </div>
 
     <script>
-        function iniciarPedido() {
-            var nome = document.getElementById("nomePessoa").value;
-            if (nome === "") {
-                document.getElementById("erro").style.display = "block";
-                return;
+        // Criar corações flutuantes
+        const heartsContainer = document.getElementById('hearts-container');
+        for (let i = 0; i < 25; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.top = Math.random() * 100 + '%';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            heart.style.fontSize = (Math.random() * 15 + 10) + 'px';
+            heartsContainer.appendChild(heart);
+        }
+
+        // Elementos DOM
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const positiveResponse = document.getElementById('positive-response');
+        const negativeResponse = document.getElementById('negative-response');
+
+        // Eventos dos botões
+        yesBtn.addEventListener('click', function() {
+            positiveResponse.classList.remove('hidden');
+            negativeResponse.classList.add('hidden');
+            
+            // Efeito especial
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.innerHTML = '❤';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = '100%';
+                    heart.style.animation = 'float 4s ease-in forwards';
+                    heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                    heart.style.color = '#d46a7e';
+                    document.body.appendChild(heart);
+                    
+                    // Remover após animação
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 4000);
+                }, i * 100);
             }
+        });
 
-            document.getElementById("erro").style.display = "none";
-            document.getElementById("nomeDisplay").textContent = nome;
-            document.getElementById("nomePessoa").style.display = "none";
-            document.getElementById("iniciar").style.display = "none";
-            document.getElementById("pedido").classList.remove("hidden");
+        noBtn.addEventListener('click', function() {
+            negativeResponse.classList.remove('hidden');
+            positiveResponse.classList.add('hidden');
+            
+            // Movimento do botão "Sim" quando o mouse passa sobre "Não"
+            noBtn.addEventListener('mouseover', function() {
+                const randomX = Math.random() * 200 - 100;
+                const randomY = Math.random() * 200 - 100;
+                yesBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            });
+            
+            noBtn.addEventListener('mouseout', function() {
+                yesBtn.style.transform = 'translate(0, 0)';
+            });
+        });
 
-            // Animação para o nome aparecer com "zoom"
-            setTimeout(function() {
-                document.getElementById("nomeDisplay").style.transform = "scale(1.2)";
-                document.getElementById("nomeDisplay").style.transition = "transform 1s";
-            }, 100);
+        // Efeito de digitação no título (opcional)
+        const title = document.querySelector('h1');
+        const originalText = title.textContent;
+        title.textContent = '';
+        
+        let i = 0;
+        function typeWriter() {
+            if (i < originalText.length) {
+                title.textContent += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
         }
-
-        function mostrarMensagem() {
-            // Adicionar efeito de fade na mensagem
-            document.getElementById("mensagem").classList.remove("hidden");
-            setTimeout(function() {
-                document.getElementById("mensagem").style.opacity = 1;
-            }, 100);
-
-            // Exibir coração pulsante
-            document.getElementById("coracao").classList.remove("hidden");
-
-            // Som de clique
-            var clickSound = new Audio('https://www.soundjay.com/button/beep-07.wav');
-            clickSound.play();
-
-            // Espera 1 segundos e depois redireciona para o vídeo
-            setTimeout(function() {
-                window.location.href = "https://youtu.be/Jr6LyMe5BJo"; // Redireciona para o vídeo
-            }, 1000);
-        }
-
-        function fugir() {
-            let botao = document.getElementById("nao");
-            let x = Math.random() * (window.innerWidth - 100);
-            let y = Math.random() * (window.innerHeight - 50);
-            botao.style.left = `${x}px`;
-            botao.style.top = `${y}px`;
-        }
+        
+        // Iniciar efeito de digitação após um breve delay
+        setTimeout(typeWriter, 1000);
     </script>
 </body>
-</html>
+    </html>
